@@ -24,7 +24,7 @@ var config = fiber.Config{
 }
 
 func main() {
-	listenAddr := flag.String("listenAdd", ":5000", "The listen address of the API server")
+	listenAddr := flag.String("listenAdd", ":9000", "The listen address of the API server")
 	flag.Parse()
 
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(dburi))
@@ -37,8 +37,10 @@ func main() {
 	app := fiber.New(config)
 	apiV1 := app.Group("/api/v1")
 
-	apiV1.Post("/user", userHandler.HandlePostUser)
 	apiV1.Get("/users", userHandler.HandleGetUsers)
+	apiV1.Post("/user", userHandler.HandlePostUser)
 	apiV1.Get("/user/:id", userHandler.HandleGetUser)
+	apiV1.Put("/user/:id", userHandler.HandlePutUser)
+	apiV1.Delete("/user/:id", userHandler.HandleDeleteUser)
 	app.Listen(*listenAddr)
 }
